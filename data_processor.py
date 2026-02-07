@@ -45,7 +45,7 @@ filtered_data = filter_data(df_long, continent=config["continent"], year=config[
 result = compute_statistic(filtered_data, config["operation"])
 
 print("Result:", result)
-#
+#filtering only by continent and year  
 filtered_asia_2020 = filter_data(df_long, continent="Asia", year=2020)
 sum_asia_2020 = compute_statistic(filtered_asia_2020, "sum")
 print("Total GDP of Asia in 2020:", sum_asia_2020)
