@@ -1,6 +1,6 @@
 def filter_data(data, continent=None, year=None, country=None):
     # data is a list of dictionaries
-    data_list = data.to_dict("records")  # convert data to list of dicts
+    data_list = data.to_dict("records")  # convert data to list of dicts, each row is now a dictionary
 
     if continent:
         data_list = list(filter(lambda x: x["Continent"] == continent, data_list))
@@ -15,7 +15,7 @@ def filter_data(data, continent=None, year=None, country=None):
 
 def compute_statistic(data, operation="average"):
     # extract gdp values using map
-    values = list(map(lambda x: x["Value"], data))
+    values = list(map(lambda x: x["Value"], data)) #transforming data to GDP values only
 
     if not values:  # checking if the list is empty or not
         return None
@@ -30,22 +30,22 @@ def compute_statistic(data, operation="average"):
 
 
 
-# example use
-config = {
-    "continent": "Asia",
-    "year": 2020,
-    "country": "Pakistan",
-    "operation": "average"
-}
+# # example use
+# config = {
+#     "continent": "Asia",
+#     "year": 2020,
+#     "country": "Pakistan",
+#     "operation": "average"
+# }
 
-# filtering
-filtered_data = filter_data(df_long, continent=config["continent"], year=config["year"], country=config["country"])
+# # filtering
+# filtered_data = filter_data(df_formatted, continent=config["continent"], year=config["year"], country=config["country"])
 
-# computing
-result = compute_statistic(filtered_data, config["operation"])
+# # computing
+# result = compute_statistic(filtered_data, config["operation"])
 
-print("Result:", result)
-#filtering only by continent and year  
-filtered_asia_2020 = filter_data(df_long, continent="Asia", year=2020)
-sum_asia_2020 = compute_statistic(filtered_asia_2020, "sum")
-print("Total GDP of Asia in 2020:", sum_asia_2020)
+# print("Result:", result)
+# #filtering only by continent and year  
+# filtered_asia_2020 = filter_data(df_formatted, continent="Asia", year=2020)
+# sum_asia_2020 = compute_statistic(filtered_asia_2020, "sum")
+# print("Total GDP of Asia in 2020:", sum_asia_2020)
