@@ -154,7 +154,7 @@ def plot_year_distribution(data, year):
     # plot a histogram of gdp values
     # bins=10 divides the data into 10 ranges
     # edgecolor='black' adds black borders around bars
-     plt.hist(
+    plt.hist(
         values,
         bins=10,
         color='skyblue',
