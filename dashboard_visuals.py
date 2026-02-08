@@ -168,3 +168,73 @@ def plot_year_distribution(data, year):
     plt.show()
 
 
+def plot_year_scatter(data, year):
+    #this function creates a scatter plot showing gdp values
+    #for each country in a specific year.
+    # extract country names
+    countries = list(
+        map(
+            lambda x: x["Country Name"],
+            data
+        )
+    )
+   
+    # extract GDP values
+    values = list(
+        map(
+            lambda x: x["Value"],
+            data
+        )
+    )
+    # we use range(len(countries)) to create positions for each country
+    # for example: if there are 5 countries, this creates [0, 1, 2, 3, 4]
+    x_positions = list(range(len(countries)))
+   
+    # create a wider figure
+    plt.figure(figsize=(14, 6)) 
+
+    # x_positions: where each point goes horizontally (0, 1, 2, ...)
+    # values: where each point goes vertically (the GDP)
+    # s=100: size of each point (bigger number = bigger dots)
+    # alpha=0.6: transparency (0.6 means 60% opaque, slightly see-through)
+    # color='coral': orange-red color for the points
+    plt.scatter(
+        x_positions,
+        values,
+        s=100,  # size of dots
+        alpha=0.6,  # transparency
+        color='coral',  # color of dots
+        edgecolors='black',  # black border around each dot
+        linewidth=0.5  # thickness of border
+    )
+   
+    # set x-axis ticks to show country names instead of numbers
+    # we replace positions [0, 1, 2, ...] with actual country names
+    plt.xticks(
+        x_positions,  # where to put labels (0, 1, 2, ...)
+        countries,  # what labels to show (country names)
+        rotation=90,  # rotate 90 degrees
+        ha='right'  # align to the right
+    )
+   
+    # set title
+    plt.title(
+        f"GDP Scatter Plot for {year}",
+        fontsize=16,
+        fontweight='bold'
+    )
+   
+    # set x-axis label
+    plt.xlabel("Country", fontsize=12)
+   
+    # set y-axis label
+    plt.ylabel("GDP (in US Dollars)", fontsize=12)
+   
+    # add a horizontal grid to help read GDP values
+    plt.grid(axis='y', alpha=0.3)
+   
+    # ajust layout
+    plt.tight_layout()
+   
+    # display scatter plot
+    plt.show()
