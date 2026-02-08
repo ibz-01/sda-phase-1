@@ -16,8 +16,8 @@ def loadFileData(filePath): #loading the file
         value_name="Value"
     )
 
-    df["Year"] = p.to_numeric(df["Year"], errors="coerce") #text to num
-    df["Value"] = p.to_numeric(df["Value"], errors="coerce")
+    df_formatted["Year"] = p.to_numeric(df_formatted["Year"], errors="coerce") #text to num
+    df_formatted["Value"] = p.to_numeric(df_formatted["Value"], errors="coerce")
     
     df_formatted = df_formatted.dropna(subset=["Year", "Value"]) #removing missing GDP rows
 
