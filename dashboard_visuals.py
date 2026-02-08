@@ -149,20 +149,32 @@ def plot_year_distribution(data, year):
     )
 
     # creating a new figure
-    plt.figure()
+     plt.figure(figsize=(10, 6))
 
     # plot a histogram of gdp values
     # bins=10 divides the data into 10 ranges
-    plt.hist(values, bins=10)
+    # edgecolor='black' adds black borders around bars
+     plt.hist(
+        values,
+        bins=10,
+        color='skyblue',
+        edgecolor='black'
+    )
 
     # title of the histogram
-    plt.title(f"GDP Distribution in {year}")
+    plt.title(f"GDP Distribution in {year}", fontsize=16, fontweight='bold')
 
     # gdp values - x axis
-    plt.xlabel("GDP")
+    plt.xlabel("GDP (in US Dollars)", fontsize=12)
 
     # frequency - y axis
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (Number of Countries)", fontsize=12)
+
+    # add a grid for easier reading
+    plt.grid(axis='y', alpha=0.3)
+   
+    # adjust layout
+    plt.tight_layout()
 
     # display histogram
     plt.show()
