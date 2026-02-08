@@ -28,25 +28,27 @@ def plot_region_gdp(data, continent, year):
     )
 
     # creating figure for plotting
-    plt.figure()
+    plt.figure(figsize=(14, 6))
 
     # drawing a bar chart
     # country name - x axis
     # gdp values - y axis
-    plt.bar(countries, values)
+    plt.bar(countries, values, color='steelblue')
 
     # rotating x axis labels so country names
     # so they remain readable
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=90, ha='right')
 
     # setting title of the graph
-    plt.title(f"GDP of {continent} in {year}")
+    plt.title(f"GDP of {continent} in {year}", fontsize=16, fontweight='bold')
 
     # x - axis label
-    plt.xlabel("Country")
+    plt.xlabel("Country", fontsize=12)
 
     # y - axis label
-    plt.ylabel("GDP")
+    plt.ylabel("GDP (in US Dollars)", fontsize=12)
+
+    plt.grid(axis='y', alpha=0.3)
 
     # adjusting layout to prevent labels cuttoff
     plt.tight_layout()
