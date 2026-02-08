@@ -3,7 +3,7 @@ from data_loader import loadFileData
 from data_processor import filter_data, compute_statistic
 from validation import validate
 # importing required  functions from the dashboard_visuals for visualisation
-from dashboard_visuals import plot_region_gdp, plot_year_distribution
+from dashboard_visuals import plot_region_gdp, plot_year_distribution, plot_region_gdp_pie, plot_year_scatter
 
 
 try:
