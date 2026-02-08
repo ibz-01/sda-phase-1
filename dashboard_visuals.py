@@ -149,7 +149,7 @@ def plot_year_distribution(data, year):
     )
 
     # creating a new figure
-     plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 6))
 
     # plot a histogram of gdp values
     # bins=10 divides the data into 10 ranges
