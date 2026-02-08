@@ -3,7 +3,7 @@ from data_loader import loadFileData
 from data_processor import filter_data, compute_statistic
 from validation import validate
 # importing required  functions from the dashboard_visuals for visualisation
-from dashboard_visuals import plot_region_gdp, plot_year_distribution
+from dashboard_visuals import plot_region_gdp, plot_year_distribution, plot_region_gdp_pie, plot_year_scatter
 
 
 try:
@@ -79,10 +79,26 @@ if filtered_data:
         config["continent"],      # selected continent
         config["year"]            # selected year for gdp compare
     )
+
+    # pie chart
+    # shows GDP as percentage/proportion of total
+    plot_region_gdp_pie(
+       filtered_data,           # same filtered data
+        config["continent"],     # same continent
+        config["year"]           # same year
+    )
+
     
     # plot the gdp distribution for the selected year
     # focus on the year specified in the config
     plot_year_distribution(
         filtered_data,            # same filtered data
         config["year"]            # year for which distribution is plotted
+    )
+
+    #scatter plot
+    #each country a point
+    plot_year_scatter(
+    filtered_data,           # same filtered data        
+    config["year"]           # same year
     )
