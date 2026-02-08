@@ -54,3 +54,42 @@ def plot_region_gdp(data, continent, year):
     # displaying bar chart
     plt.show()
 
+
+
+    
+def plot_year_distribution(data, year):
+    """
+    This function creates a HISTOGRAM showing the distribution
+    of GDP values for a specific year.
+    """
+
+    # extracing gdp values from data
+    # looping through each dictionary in data
+    # and collect the gdp value
+    values = list(
+        map(
+            lambda x: x["Value"],
+            data
+        )
+    )
+
+    # creating a new figure
+    plt.figure()
+
+    # plot a histogram of gdp values
+    # bins=10 divides the data into 10 ranges
+    plt.hist(values, bins=10)
+
+    # title of the histogram
+    plt.title(f"GDP Distribution in {year}")
+
+    # gdp values - x axis
+    plt.xlabel("GDP")
+
+    # frequency - y axis
+    plt.ylabel("Frequency")
+
+    # display histogram
+    plt.show()
+
+
