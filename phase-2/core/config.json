@@ -1,0 +1,9 @@
+{
+    "input_type": "json",
+    "output_type": "console",
+    "data_path": "data/gdp_with_continent_filled.json",
+    "continent": "North America",
+    "start_year": 2010,
+    "end_year": 2023,
+    "analysis": "top_10"
+}
