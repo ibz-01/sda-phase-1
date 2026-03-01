@@ -1,17 +1,16 @@
-from typing import List
-from core.contracts import DataSink
-
-
 class ConsoleWriter:
-    """
-    Concrete Output Implementation.
-    This satisfies the DataSink Protocol.
-    """
 
-    def write(self, records: List[dict]) -> None:
-        print("\n--- OUTPUT START ---\n")
+    def write(self, records):
+
+        print("\n========== RESULT ==========\n")
+
+        if not records:
+            print("No data found.")
+            return
 
         for record in records:
-            print(record)
+            for key, value in record.items():
+                print(f"{key}: {value}")
+            print("---------------------------")
 
-        print("\n--- OUTPUT END ---\n")
+        print("\n============================\n")
