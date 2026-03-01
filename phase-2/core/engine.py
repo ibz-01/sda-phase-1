@@ -39,4 +39,15 @@ class TransformationEngine(PipelineService):
             }
 
         mapped_data = list(map(compute_total, filtered_by_continent))
-        
+
+        # Step 3: Sort descending
+        sorted_data = sorted(
+            mapped_data,
+            key=lambda x: x["Total GDP"],
+            reverse=True
+        )
+
+        # Step 4: Top 10
+        result = sorted_data[:10]
+
+        self.sink.write(result)
