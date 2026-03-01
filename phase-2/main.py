@@ -1,8 +1,7 @@
 import json
-import os
 
 from core.engine import TransformationEngine
-from plugins.inputs import JsonReader, CsvReader
+from plugins.inputs import JsonReader
 from plugins.outputs import ConsoleWriter
 
 
@@ -12,29 +11,14 @@ def load_config(path: str) -> dict:
 
 
 def main():
-    base_dir = os.path.dirname(__file__)
-    config_path = os.path.join(base_dir, "config.json")
-    config = load_config(config_path)
+    config = load_config("config.json")
 
-    # Driver Factories
-    INPUT_DRIVERS = {
-        "json": JsonReader,
-        "csv": CsvReader
-    }
+    output_driver = ConsoleWriter()
 
-    OUTPUT_DRIVERS = {
-        "console": ConsoleWriter
-    }
-
-    # Create Output dynamically
-    output_driver = OUTPUT_DRIVERS[config["output_type"]]()
-
-    # Inject output + config into engine
+    # Inject BOTH sink and config into engine
     engine = TransformationEngine(output_driver, config)
 
-    # Create Input dynamically
-    input_class = INPUT_DRIVERS[config["input_type"]]
-    input_driver = input_class(config["data_path"], engine)
+    input_driver = JsonReader(config["data_path"], engine)
 
     input_driver.run()
 
