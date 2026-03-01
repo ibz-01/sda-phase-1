@@ -5,15 +5,26 @@ from .contracts import DataSink, PipelineService
 class TransformationEngine(PipelineService):
 
     def __init__(self, sink: DataSink):
-        # Dependency Injection happens here
         self.sink = sink
 
     def execute(self, raw_data: List[Any]) -> None:
         """
         Entry point from Input Module.
+        Applies simple filtering logic (temporary).
         """
-        # For now, just pass raw data directly to sink
-        processed_data = raw_data
 
-        self.sink.write(processed_data) 
-    
+        # Example simple transformation:
+        # Only keep records that contain "country"
+        processed_data = list(
+            filter(lambda record: "country" in record, raw_data)
+        )
+
+        self.sink.write(processed_data)
+
+
+
+
+
+
+
+        
