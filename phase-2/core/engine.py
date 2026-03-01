@@ -1,30 +1,21 @@
 from typing import List, Any
+from functools import reduce
 from .contracts import DataSink, PipelineService
 
 
 class TransformationEngine(PipelineService):
 
-    def __init__(self, sink: DataSink):
+    def __init__(self, sink: DataSink, config: dict):
         self.sink = sink
+        self.config = config
 
     def execute(self, raw_data: List[Any]) -> None:
-        """
-        Entry point from Input Module.
-        Applies simple filtering logic (temporary).
-        """
 
-        # Example simple transformation:
-        # Only keep records that contain "country"
-        processed_data = list(
-            filter(lambda record: "Country Name" in record, raw_data)
+        continent = self.config["continent"]
+        start_year = str(self.config["start_year"])
+        end_year = str(self.config["end_year"])
+
+        # Step 1: Filter by continent
+        filtered_by_continent = list(
+            filter(lambda record: record.get("Continent") == continent, raw_data)
         )
-
-        self.sink.write(processed_data)
-
-
-
-
-
-
-
-        
