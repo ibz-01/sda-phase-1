@@ -15,7 +15,7 @@ def load_config(path: str) -> dict:
 
 def main():
     # Step 1: Load configuration
-    config = load_config("gdp_with_continent_filled.json")
+    config = load_config("config.json")
 
     # Step 2: Create Output (DataSink)
     output_driver = ConsoleWriter()

@@ -16,7 +16,7 @@ class TransformationEngine(PipelineService):
         # Example simple transformation:
         # Only keep records that contain "country"
         processed_data = list(
-            filter(lambda record: "country" in record, raw_data)
+            filter(lambda record: "Country Name" in record, raw_data)
         )
 
         self.sink.write(processed_data)
