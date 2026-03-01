@@ -141,3 +141,56 @@ class TransformationEngine:
             })
 
         return result
+    # 6 FASTEST CONTINENT
+    # -------------------------
+    def fastest_growing_continent(self, data):
+        start = str(self.config["start_year"])
+        end = str(self.config["end_year"])
+
+        growth = {}
+
+        for row in data:
+            cont = row["Continent"]
+            if row.get(start) and row.get(end):
+
+                rate = ((row[end] - row[start]) / row[start]) * 100
+
+                if cont not in growth:
+                    growth[cont] = []
+
+                growth[cont].append(rate)
+
+        result = []
+
+        for cont, rates in growth.items():
+            avg_growth = sum(rates) / len(rates)
+            result.append({
+                "Continent": cont,
+                "Average Growth (%)": round(avg_growth, 2)
+            })
+
+        result.sort(key=lambda x: x["Average Growth (%)"], reverse=True)
+
+        return result
+
+    # -------------------------
+    # 7 CONSISTENT DECLINE
+    # -------------------------
+    def consistent_decline(self, data):
+        x = self.config["x_years"]
+        end = self.config["end_year"]
+
+        result = []
+
+        for row in data:
+            years = [str(end - i) for i in range(x)]
+
+            values = [row.get(y) for y in years if row.get(y)]
+
+            if len(values) == x:
+                if all(values[i] > values[i+1] for i in range(len(values)-1)):
+                    result.append({
+                        "Country": row["Country Name"]
+                    })
+
+        return result
