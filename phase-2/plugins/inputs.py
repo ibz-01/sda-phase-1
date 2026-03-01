@@ -1,30 +1,31 @@
-from typing import List, Any
-from core.contracts import PipelineService
 import json
+import csv
+from typing import Any
+from core.contracts import PipelineService
 
 
 class JsonReader:
-    """
-    Concrete Input Implementation.
-    Reads JSON file and sends raw data to Core.
-    """
 
     def __init__(self, file_path: str, service: PipelineService):
         self.file_path = file_path
         self.service = service
-    def run(self) -> None:
-        """
-        Entry point to start reading data.
-        """
 
+    def run(self) -> None:
         with open(self.file_path, "r") as file:
             data = json.load(file)
 
-        # Send raw data to core
         self.service.execute(data)
 
 
+class CsvReader:
 
+    def __init__(self, file_path: str, service: PipelineService):
+        self.file_path = file_path
+        self.service = service
 
+    def run(self) -> None:
+        with open(self.file_path, newline="") as file:
+            reader = csv.DictReader(file)
+            data = list(reader)
 
-
+        self.service.execute(data)
