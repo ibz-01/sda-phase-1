@@ -194,3 +194,30 @@ class TransformationEngine:
                     })
 
         return result
+   # 8 CONTRIBUTION
+    # -------------------------
+    def contribution_to_global(self, data):
+        start = self.config["start_year"]
+        end = self.config["end_year"]
+
+        continent_totals = {}
+        global_total = 0
+
+        for row in data:
+            for year in range(start, end + 1):
+                val = row.get(str(year)) or 0
+                global_total += val
+
+                cont = row["Continent"]
+                continent_totals[cont] = continent_totals.get(cont, 0) + val
+
+        result = []
+
+        for cont, total in continent_totals.items():
+            percent = (total / global_total) * 100 if global_total else 0
+            result.append({
+                "Continent": cont,
+                "Contribution (%)": round(percent, 2)
+            })
+
+        return result
