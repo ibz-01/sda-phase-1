@@ -1,9 +1,9 @@
 {
-    "input_type": "json",
-    "output_type": "console",
     "data_path": "gdp_with_continent_filled_cleaned.json",
-    "continent": "North America",
+    "analysis": "growth_rate",
+    "continent": "Asia",
+    "year": 2020,
     "start_year": 2010,
-    "end_year": 2023,
-    "analysis": "top_10"
+    "end_year": 2020,
+    "x_years": 5
 }
