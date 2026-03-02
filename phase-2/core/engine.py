@@ -40,33 +40,58 @@ class TransformationEngine:
 
         self.sink.write(result)
 
-    # -------------------------
-    # 1 TOP 10
-    # -------------------------
-    def top_10(self, data):
-        continent = self.config["continent"]
-        year = str(self.config["year"])
+   def top_10_countries(self, data, continent, start_year, end_year):
 
-        filtered = list(
-            filter(lambda r: r["Continent"] == continent and r.get(year), data)
-        )
+    # Step 1: Filter by continent AND year range
+    filtered = list(filter(
+        lambda x: x["Continent"] == continent and
+                  start_year <= int(x["Year"]) <= end_year,
+        data
+    ))
 
-        sorted_data = sorted(filtered, key=lambda r: r[year], reverse=True)
+    # Step 2: Aggregate GDP by country
+    country_totals = {}
 
-        return sorted_data[:10]
+    for record in filtered:
+        country = record["Country Name"]
+        value = float(record["Value"])
+
+        country_totals[country] = country_totals.get(country, 0) + value
+
+    # Step 3: Convert dictionary to list of dict
+    result = [{"Country": k, "Total GDP": v}
+              for k, v in country_totals.items()]
+
+    # Step 4: Sort descending
+    result = sorted(result, key=lambda x: x["Total GDP"], reverse=True)
+
+    return result[:10]
     # 2 BOTTOM 10
     # -------------------------
-    def bottom_10(self, data):
-        continent = self.config["continent"]
-        year = str(self.config["year"])
 
-        filtered = list(
-            filter(lambda r: r["Continent"] == continent and r.get(year), data)
-        )
 
-        sorted_data = sorted(filtered, key=lambda r: r[year])
+def bottom_10_countries(self, data, continent, start_year, end_year):
 
-        return sorted_data[:10]
+    filtered = list(filter(
+        lambda x: x["Continent"] == continent and
+                  start_year <= int(x["Year"]) <= end_year,
+        data
+    ))
+
+    country_totals = {}
+
+    for record in filtered:
+        country = record["Country Name"]
+        value = float(record["Value"])
+
+        country_totals[country] = country_totals.get(country, 0) + value
+
+    result = [{"Country": k, "Total GDP": v}
+              for k, v in country_totals.items()]
+
+    result = sorted(result, key=lambda x: x["Total GDP"])
+
+    return result[:10]
 
     # -------------------------
     # 3 GROWTH RATE
