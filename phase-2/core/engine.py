@@ -7,145 +7,149 @@ class TransformationEngine:
         self.sink = sink
         self.config = config
 
-def execute(self, raw_data):
+    # ===============================
+    # MAIN EXECUTION
+    # ===============================
+    def execute(self, data):
 
-    continent = self.config["continent"]
-    start_year = self.config["start_year"]
-    end_year = self.config["end_year"]
-
-    results = {}
-
-    # 1 Top 10
-    results["Top 10 Countries"] = self.top_10_countries(
-        raw_data, continent, start_year, end_year
-    )
-
-    # 2 Bottom 10
-    results["Bottom 10 Countries"] = self.bottom_10_countries(
-        raw_data, continent, start_year, end_year
-    )
-
-    # 3 GDP Growth Rate
-    results["GDP Growth Rate"] = self.gdp_growth_rate(
-        raw_data, continent, start_year, end_year
-    )
-
-    # 4 Average GDP by Continent
-    results["Average GDP by Continent"] = self.avg_gdp_by_continent(
-        raw_data, start_year, end_year
-    )
-
-    # 5 Global GDP Trend
-    results["Global GDP Trend"] = self.global_gdp_trend(
-        raw_data, start_year, end_year
-    )
-
-    # 6 Fastest Growing Continent
-    results["Fastest Growing Continent"] = self.fastest_growing_continent(
-        raw_data, start_year, end_year
-    )
-
-    # 7 Consistent Decline Countries
-    results["Consistent Decline"] = self.consistent_decline(
-        raw_data, continent, end_year
-    )
-
-    # 8 Contribution to Global GDP
-    results["Contribution to Global GDP"] = self.continent_contribution(
-        raw_data, start_year, end_year
-    )
-
-    # Send EVERYTHING to sink
-    self.sink.write(results)
-
-   def top_10_countries(self, data, continent, start_year, end_year):
-
-    # Step 1: Filter by continent AND year range
-    filtered = list(filter(
-        lambda x: x["Continent"] == continent and
-                  start_year <= int(x["Year"]) <= end_year,
-        data
-    ))
-
-    # Step 2: Aggregate GDP by country
-    country_totals = {}
-
-    for record in filtered:
-        country = record["Country Name"]
-        value = float(record["Value"])
-
-        country_totals[country] = country_totals.get(country, 0) + value
-
-    # Step 3: Convert dictionary to list of dict
-    result = [{"Country": k, "Total GDP": v}
-              for k, v in country_totals.items()]
-
-    # Step 4: Sort descending
-    result = sorted(result, key=lambda x: x["Total GDP"], reverse=True)
-
-    return result[:10]
-    # 2 BOTTOM 10
-    # -------------------------
-
-
-def bottom_10_countries(self, data, continent, start_year, end_year):
-
-    filtered = list(filter(
-        lambda x: x["Continent"] == continent and
-                  start_year <= int(x["Year"]) <= end_year,
-        data
-    ))
-
-    country_totals = {}
-
-    for record in filtered:
-        country = record["Country Name"]
-        value = float(record["Value"])
-
-        country_totals[country] = country_totals.get(country, 0) + value
-
-    result = [{"Country": k, "Total GDP": v}
-              for k, v in country_totals.items()]
-
-    result = sorted(result, key=lambda x: x["Total GDP"])
-
-    return result[:10]
-
-    # -------------------------
-    # 3 GROWTH RATE
-    # -------------------------
-    def growth_rate(self, data):
         continent = self.config["continent"]
-        start = str(self.config["start_year"])
-        end = str(self.config["end_year"])
+        start_year = self.config["start_year"]
+        end_year = self.config["end_year"]
+
+        results = {}
+
+        results["Top 10 Countries"] = self.top_10_countries(
+            data, continent, start_year, end_year
+        )
+
+        results["Bottom 10 Countries"] = self.bottom_10_countries(
+            data, continent, start_year, end_year
+        )
+
+        results["GDP Growth Rate"] = self.gdp_growth_rate(
+            data, continent, start_year, end_year
+        )
+
+        results["Average GDP by Continent"] = self.avg_gdp_by_continent(
+            data, start_year, end_year
+        )
+
+        results["Global GDP Trend"] = self.global_gdp_trend(
+            data, start_year, end_year
+        )
+
+        results["Fastest Growing Continent"] = self.fastest_growing_continent(
+            data, start_year, end_year
+        )
+
+        results["Consistent Decline"] = self.consistent_decline(
+            data, continent
+        )
+
+        results["Contribution to Global GDP"] = self.continent_contribution(
+            data, start_year, end_year
+        )
+
+        self.sink.write(results)
+
+    # ===============================
+    # 1 TOP 10
+    # ===============================
+    def top_10_countries(self, data, continent, start_year, end_year):
+
+        country_totals = {}
+
+        for row in data:
+            if row["Continent"] != continent:
+                continue
+
+            total = 0
+            for year in range(start_year, end_year + 1):
+                value = row.get(str(year))
+                if value:
+                    total += float(value)
+
+            country_totals[row["Country Name"]] = total
+
+        result = [{"Country": k, "Total GDP": v}
+                  for k, v in country_totals.items()]
+
+        result.sort(key=lambda x: x["Total GDP"], reverse=True)
+
+        return result[:10]
+
+    # ===============================
+    # 2 BOTTOM 10
+    # ===============================
+    def bottom_10_countries(self, data, continent, start_year, end_year):
+
+        country_totals = {}
+
+        for row in data:
+            if row["Continent"] != continent:
+                continue
+
+            total = 0
+            for year in range(start_year, end_year + 1):
+                value = row.get(str(year))
+                if value:
+                    total += float(value)
+
+            country_totals[row["Country Name"]] = total
+
+        result = [{"Country": k, "Total GDP": v}
+                  for k, v in country_totals.items()]
+
+        result.sort(key=lambda x: x["Total GDP"])
+
+        return result[:10]
+
+    # ===============================
+    # 3 GDP GROWTH RATE
+    # ===============================
+    def gdp_growth_rate(self, data, continent, start_year, end_year):
 
         result = []
 
         for row in data:
-            if row["Continent"] == continent:
-                if row.get(start) and row.get(end):
-                    growth = ((row[end] - row[start]) / row[start]) * 100
-                    result.append({
-                        "Country": row["Country Name"],
-                        "Growth Rate (%)": round(growth, 2)
-                    })
+            if row["Continent"] != continent:
+                continue
+
+            start_val = row.get(str(start_year))
+            end_val = row.get(str(end_year))
+
+            if start_val and end_val and float(start_val) != 0:
+                growth = ((float(end_val) - float(start_val)) /
+                          float(start_val)) * 100
+
+                result.append({
+                    "Country": row["Country Name"],
+                    "Growth Rate (%)": round(growth, 2)
+                })
 
         return result
 
-    # -------------------------
-    # 4 AVERAGE BY CONTINENT
-    # -------------------------
-    def average_by_continent(self, data):
-        start = str(self.config["start_year"])
-        end = str(self.config["end_year"])
+    # ===============================
+    # 4 AVERAGE GDP BY CONTINENT
+    # ===============================
+    def avg_gdp_by_continent(self, data, start_year, end_year):
 
         continent_totals = {}
 
         for row in data:
             continent = row["Continent"]
 
-            if row.get(start) and row.get(end):
-                avg = (row[start] + row[end]) / 2
+            total = 0
+            count = 0
+
+            for year in range(start_year, end_year + 1):
+                value = row.get(str(year))
+                if value:
+                    total += float(value)
+                    count += 1
+
+            if count > 0:
+                avg = total / count
 
                 if continent not in continent_totals:
                     continent_totals[continent] = []
@@ -162,21 +166,20 @@ def bottom_10_countries(self, data, continent, start_year, end_year):
 
         return result
 
-    # -------------------------
-    # 5 GLOBAL TREND
-    # -------------------------
-    def total_global_trend(self, data):
-        start = self.config["start_year"]
-        end = self.config["end_year"]
+    # ===============================
+    # 5 GLOBAL GDP TREND
+    # ===============================
+    def global_gdp_trend(self, data, start_year, end_year):
 
         result = []
 
-        for year in range(start, end + 1):
-            year_str = str(year)
-            total = sum(
-                row.get(year_str, 0) or 0
-                for row in data
-            )
+        for year in range(start_year, end_year + 1):
+            total = 0
+
+            for row in data:
+                value = row.get(str(year))
+                if value:
+                    total += float(value)
 
             result.append({
                 "Year": year,
@@ -184,29 +187,35 @@ def bottom_10_countries(self, data, continent, start_year, end_year):
             })
 
         return result
-    # 6 FASTEST CONTINENT
-    # -------------------------
-    def fastest_growing_continent(self, data):
-        start = str(self.config["start_year"])
-        end = str(self.config["end_year"])
 
-        growth = {}
+    # ===============================
+    # 6 FASTEST GROWING CONTINENT
+    # ===============================
+    def fastest_growing_continent(self, data, start_year, end_year):
+
+        continent_growth = {}
 
         for row in data:
-            cont = row["Continent"]
-            if row.get(start) and row.get(end):
+            start_val = row.get(str(start_year))
+            end_val = row.get(str(end_year))
 
-                rate = ((row[end] - row[start]) / row[start]) * 100
+            if start_val and end_val and float(start_val) != 0:
 
-                if cont not in growth:
-                    growth[cont] = []
+                growth = ((float(end_val) - float(start_val)) /
+                          float(start_val)) * 100
 
-                growth[cont].append(rate)
+                cont = row["Continent"]
+
+                if cont not in continent_growth:
+                    continent_growth[cont] = []
+
+                continent_growth[cont].append(growth)
 
         result = []
 
-        for cont, rates in growth.items():
-            avg_growth = sum(rates) / len(rates)
+        for cont, values in continent_growth.items():
+            avg_growth = sum(values) / len(values)
+
             result.append({
                 "Continent": cont,
                 "Average Growth (%)": round(avg_growth, 2)
@@ -216,48 +225,61 @@ def bottom_10_countries(self, data, continent, start_year, end_year):
 
         return result
 
-    # -------------------------
+    # ===============================
     # 7 CONSISTENT DECLINE
-    # -------------------------
-    def consistent_decline(self, data):
+    # ===============================
+    def consistent_decline(self, data, continent):
+
         x = self.config["x_years"]
-        end = self.config["end_year"]
+        end_year = self.config["end_year"]
 
         result = []
 
         for row in data:
-            years = [str(end - i) for i in range(x)]
+            if row["Continent"] != continent:
+                continue
 
-            values = [row.get(y) for y in years if row.get(y)]
+            values = []
+
+            for i in range(x):
+                year = str(end_year - i)
+                val = row.get(year)
+                if val:
+                    values.append(float(val))
 
             if len(values) == x:
-                if all(values[i] > values[i+1] for i in range(len(values)-1)):
+                if all(values[i] > values[i + 1]
+                       for i in range(len(values) - 1)):
+
                     result.append({
                         "Country": row["Country Name"]
                     })
 
         return result
-   # 8 CONTRIBUTION
-    # -------------------------
-    def contribution_to_global(self, data):
-        start = self.config["start_year"]
-        end = self.config["end_year"]
+
+    # ===============================
+    # 8 CONTRIBUTION TO GLOBAL GDP
+    # ===============================
+    def continent_contribution(self, data, start_year, end_year):
 
         continent_totals = {}
         global_total = 0
 
         for row in data:
-            for year in range(start, end + 1):
-                val = row.get(str(year)) or 0
-                global_total += val
+            cont = row["Continent"]
 
-                cont = row["Continent"]
-                continent_totals[cont] = continent_totals.get(cont, 0) + val
+            for year in range(start_year, end_year + 1):
+                value = row.get(str(year))
+                if value:
+                    val = float(value)
+                    global_total += val
+                    continent_totals[cont] = continent_totals.get(cont, 0) + val
 
         result = []
 
         for cont, total in continent_totals.items():
             percent = (total / global_total) * 100 if global_total else 0
+
             result.append({
                 "Continent": cont,
                 "Contribution (%)": round(percent, 2)
