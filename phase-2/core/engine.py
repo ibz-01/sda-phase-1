@@ -7,38 +7,56 @@ class TransformationEngine:
         self.sink = sink
         self.config = config
 
-    def execute(self, raw_data: List[Dict]) -> None:
+def execute(self, raw_data):
 
-        analysis = self.config["analysis"]
+    continent = self.config["continent"]
+    start_year = self.config["start_year"]
+    end_year = self.config["end_year"]
 
-        if analysis == "top10":
-            result = self.top_10(raw_data)
+    results = {}
 
-        elif analysis == "bottom10":
-            result = self.bottom_10(raw_data)
+    # 1 Top 10
+    results["Top 10 Countries"] = self.top_10_countries(
+        raw_data, continent, start_year, end_year
+    )
 
-        elif analysis == "growth_rate":
-            result = self.growth_rate(raw_data)
+    # 2 Bottom 10
+    results["Bottom 10 Countries"] = self.bottom_10_countries(
+        raw_data, continent, start_year, end_year
+    )
 
-        elif analysis == "average_by_continent":
-            result = self.average_by_continent(raw_data)
+    # 3 GDP Growth Rate
+    results["GDP Growth Rate"] = self.gdp_growth_rate(
+        raw_data, continent, start_year, end_year
+    )
 
-        elif analysis == "global_trend":
-            result = self.total_global_trend(raw_data)
+    # 4 Average GDP by Continent
+    results["Average GDP by Continent"] = self.avg_gdp_by_continent(
+        raw_data, start_year, end_year
+    )
 
-        elif analysis == "fastest_continent":
-            result = self.fastest_growing_continent(raw_data)
+    # 5 Global GDP Trend
+    results["Global GDP Trend"] = self.global_gdp_trend(
+        raw_data, start_year, end_year
+    )
 
-        elif analysis == "consistent_decline":
-            result = self.consistent_decline(raw_data)
+    # 6 Fastest Growing Continent
+    results["Fastest Growing Continent"] = self.fastest_growing_continent(
+        raw_data, start_year, end_year
+    )
 
-        elif analysis == "contribution":
-            result = self.contribution_to_global(raw_data)
+    # 7 Consistent Decline Countries
+    results["Consistent Decline"] = self.consistent_decline(
+        raw_data, continent, end_year
+    )
 
-        else:
-            result = [{"error": "Invalid analysis type"}]
+    # 8 Contribution to Global GDP
+    results["Contribution to Global GDP"] = self.continent_contribution(
+        raw_data, start_year, end_year
+    )
 
-        self.sink.write(result)
+    # Send EVERYTHING to sink
+    self.sink.write(results)
 
    def top_10_countries(self, data, continent, start_year, end_year):
 
