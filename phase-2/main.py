@@ -57,8 +57,8 @@ def validate_config(config: dict) -> None:
             f"Please make both fields consistent in config.json."
         )
 
-    # ── year / start_year / end_year type check ───────────────────────────
-    year_fields = ["year", "start_year", "end_year"]
+    # ── year / start_year / end_year / x_years type check ────────────────
+    year_fields = ["year", "start_year", "end_year", "x_years"]
 
     for field in year_fields:
         if field not in config:
@@ -77,6 +77,21 @@ def validate_config(config: dict) -> None:
         raise SystemExit(
             f"[Config Error] 'start_year' ({config['start_year']}) must be "
             f"less than or equal to 'end_year' ({config['end_year']})."
+        )
+
+    # ── output type check ─────────────────────────────────────────────────
+    VALID_OUTPUTS = ["console", "charts"]
+    output_type = config.get("output", "").strip().lower()
+
+    if not output_type:
+        raise SystemExit("[Config Error] 'output' field is missing or empty in config.json.")
+
+    if output_type not in VALID_OUTPUTS:
+        supported = ", ".join(VALID_OUTPUTS)
+        raise SystemExit(
+            f"[Config Error] Unsupported output type '{output_type}'.\n"
+            f"  Supported values: {supported}\n"
+            f"  Fix: set \"output\" to one of the supported values in config.json."
         )
 
 
