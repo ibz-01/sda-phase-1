@@ -2,15 +2,17 @@ class ConsoleWriter:
 
     def write(self, records):
 
-        print("\n========== RESULT ==========\n")
+        print("\n================ GDP ANALYSIS DASHBOARD ================\n")
 
-        if not records:
-            print("No data found.")
-            return
+        for title, data in records.items():
 
-        for record in records:
-            for key, value in record.items():
-                print(f"{key}: {value}")
-            print("---------------------------")
+            print(f"\n----- {title} -----\n")
 
-        print("\n============================\n")
+            if isinstance(data, list):
+                for row in data:
+                    print(row)
+
+            else:
+                print(data)
+
+        print("\n================ END OF REPORT =========================\n")
