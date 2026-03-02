@@ -23,19 +23,20 @@ def main():
     }
 
     OUTPUT_DRIVERS = {
-        "console": ConsoleWriter
+        "console": ConsoleWriter,
+        "charts": GraphicsChartWriter
     }
 
     # Create Output dynamically
     output_type = config.get("output", "console")   
-    output_driver = OUTPUT_DRIVERS[config["output_type"]]()
+    output_driver = OUTPUT_DRIVERS[output_type]()
 
     # Inject output + config into engine
     engine = TransformationEngine(output_driver, config)
 
     # Create Input dynamically
     input_type = config.get("input", "json")
-    input_class = INPUT_DRIVERS[config["input_type"]]
+    input_class = INPUT_DRIVERS[input_type]
     input_driver = input_class(config["data_path"], engine)
 
     input_driver.run()

@@ -44,6 +44,7 @@ class GraphicsChartWriter:
     def _save(self, title: str):
         plt.tight_layout()
         plt.savefig(self._safe_filename(title), dpi=150)
+        plt.show()
         plt.close()
 
     # ---- chart methods ----
