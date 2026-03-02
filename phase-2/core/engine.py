@@ -1,6 +1,9 @@
 from typing import List, Dict
 
-
+#Recieves clean raw data
+#Applies business logic
+#Produces result
+#Send result to output(sink)
 class TransformationEngine:
 
     def __init__(self, sink, config):

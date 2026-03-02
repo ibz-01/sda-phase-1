@@ -15,7 +15,8 @@ class JsonReader:
             data = json.load(file)
 
         self.service.execute(data)
-
+        #service is transformation engine and this is dependency inversion
+        #it doesnt know about transformation engine and just know about the service
 
 class CsvReader:
 
