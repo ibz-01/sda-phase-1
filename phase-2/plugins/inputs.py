@@ -28,4 +28,20 @@ class CsvReader:
             reader = csv.DictReader(file)
             data = list(reader)
 
-        self.service.execute(data)
+        # Normalize keys to match JSON format expected by engine
+        normalized = []
+        for row in data:
+            new_row = {k.strip(): v for k, v in row.items() if k is not None}
+            
+            # Remap CSV column names to match engine expectations
+            if "continent" in new_row:
+                new_row["Continent"] = new_row.pop("continent")
+            if "Country Name" not in new_row and "Country NameCountry Code" in new_row:
+                new_row["Country Name"] = new_row.pop("Country NameCountry Code")
+
+            normalized.append(new_row)
+
+        print(list(normalized[0].keys()))
+        input("Press Enter to continue...")
+
+        self.service.execute(normalized)

@@ -1,5 +1,5 @@
 {
-    "data_path": "gdp_with_continent_filled_cleaned.json",
+    "data_path": "gdp_with_continent_filled.xlsx - GDP.csv",
     "analysis": "growth_rate",
     "continent": "Asia",
     "year": 2020,
