@@ -5,5 +5,7 @@
     "year": 2020,
     "start_year": 2010,
     "end_year": 2020,
-    "x_years": 5
+    "x_years": 5,
+    "input": "json",
+    "output": "charts"
 }
