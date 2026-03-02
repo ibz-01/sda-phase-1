@@ -41,7 +41,4 @@ class CsvReader:
 
             normalized.append(new_row)
 
-        print(list(normalized[0].keys()))
-        input("Press Enter to continue...")
-
         self.service.execute(normalized)
