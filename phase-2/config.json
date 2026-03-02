@@ -1,7 +1,7 @@
 {
     "data_path": "gdp_with_continent_filled.xlsx - GDP.csv",
     "analysis": "growth_rate",
-    "continent": "Asia",
+    "continent": "Europe",
     "year": 2020,
     "start_year": 2010,
     "end_year": 2020,
