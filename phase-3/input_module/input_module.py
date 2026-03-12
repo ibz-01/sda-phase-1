@@ -35,3 +35,38 @@ class InputModule(AbstractInputModule):
 
         # schema_mapping tells us: original column name → internal name + data type
         self.columns = config["schema_mapping"]["columns"]
+
+    def _cast_value(self, value: str, data_type: str):
+        """
+        converts a raw string value from CSV into the correct Python type
+        based on what the config says the type should be
+        """
+        if data_type == "integer":
+            return int(value)
+        elif data_type == "float":
+            return float(value)
+        else:
+            # default: treat as string (no conversion needed)
+            return str(value)
+
+    def _map_row(self, row: dict) -> dict:
+        """
+        takes one raw CSV row and converts it to a generic data packet
+        using the schema mapping from config — this makes the module domain-agnostic
+        """
+        packet = {}
+        for col in self.columns:
+            # get the original column name from config (e.g. "Sensor_ID")
+            source = col["source_name"]
+
+            # get the internal name we want to use (e.g. "entity_name")
+            internal = col["internal_mapping"]
+
+            # get what type this value should be (e.g. "float")
+            dtype = col["data_type"]
+
+            # read the raw string from the CSV row and cast it to the right type
+            raw_val = row[source]
+            packet[internal] = self._cast_value(raw_val, dtype)
+
+        return packet  # returns something like: {"entity_name": "Sensor_Alpha", "time_period": 1773037623, ...}
