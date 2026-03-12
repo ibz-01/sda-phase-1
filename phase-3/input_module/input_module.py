@@ -70,3 +70,31 @@ class InputModule(AbstractInputModule):
             packet[internal] = self._cast_value(raw_val, dtype)
 
         return packet  # returns something like: {"entity_name": "Sensor_Alpha", "time_period": 1773037623, ...}
+
+    def run(self):
+        """
+        main loop — opens the CSV, reads each row, maps it, and puts it in the queue.
+        this method runs as its own separate process (called from main.py)
+        """
+        print("[InputModule] Starting to read data...")
+
+        with open(self.dataset_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)  # reads each row as a dict with column names as keys
+
+            for row in reader:
+                # convert the raw CSV row into a standardized packet
+                packet = self._map_row(row)
+
+                # put the packet into the queue — if queue is full (backpressure), this will block automatically
+                self.raw_queue.put(packet)
+
+                # wait before reading the next row (simulates a data stream speed)
+                time.sleep(self.delay)
+
+        # after all rows are sent, put a special sentinel value to signal "no more data"
+        # each core worker will receive one of these to know it should stop
+        num_workers = self.config["pipeline_dynamics"]["core_parallelism"]
+        for _ in range(num_workers):
+            self.raw_queue.put(None)  # None = stop signal for workers
+
+        print("[InputModule] All data sent. Sent stop signals to workers.")
