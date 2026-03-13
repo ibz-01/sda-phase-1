@@ -79,3 +79,17 @@ class PipelineTelemetry:
             self._notify_all(telemetry_data)
 
             time.sleep(0.5)  # poll every half second
+    def start(self):
+        """
+        starts the background polling thread — non-blocking so rest of app keeps running
+        """
+        self._running = True
+        # daemon=True means this thread auto-dies when the main program exits
+        thread = threading.Thread(target=self._poll_loop, daemon=True)
+        thread.start()
+        print("[Telemetry] Monitoring started.")
+
+    def stop(self):
+        """stops the polling loop"""
+        self._running = False
+        print("[Telemetry] Monitoring stopped.")
