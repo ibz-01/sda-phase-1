@@ -38,3 +38,44 @@ class PipelineTelemetry:
 
         # flag to stop the polling loop cleanly
         self._running = False
+    def subscribe(self, observer: AbstractObserver):
+        """
+        adds an observer to the notification list.
+        this is how the dashboard "registers" itself to receive telemetry updates
+        """
+        self._observers.append(observer)
+
+    def _notify_all(self, telemetry_data: dict):
+        """
+        calls update() on every subscribed observer with the latest queue data.
+        observers don't know about each other — they just react to the data
+        """
+        for observer in self._observers:
+            observer.update(telemetry_data)
+
+    def _poll_loop(self):
+        """
+        runs in a background thread — checks queue sizes every 0.5s and notifies observers
+        """
+        while self._running:
+            try:
+                # read current fill levels of each queue
+                raw_size = self.raw_queue.qsize()
+                inter_size = self.intermediate_queue.qsize()
+                proc_size = self.processed_queue.qsize()
+            except Exception:
+                # qsize() can fail on some platforms (like macOS) — default to 0 if so
+                raw_size = inter_size = proc_size = 0
+
+            # package the data into a dict for observers to use
+            telemetry_data = {
+                "raw_queue_size": raw_size,
+                "intermediate_queue_size": inter_size,
+                "processed_queue_size": proc_size,
+                "max_size": self.max_size
+            }
+
+            # push this data to all subscribed observers (e.g. the dashboard)
+            self._notify_all(telemetry_data)
+
+            time.sleep(0.5)  # poll every half second
