@@ -1,5 +1,5 @@
 {
-  "dataset_path": "data/sample_sensor_data.csv",
+  "dataset_path": "data/gdp_data.csv",
   "pipeline_dynamics": {
     "input_delay_seconds": 0.01,
     "core_parallelism": 4,
@@ -7,26 +7,11 @@
   },
   "schema_mapping": {
     "columns": [
-      {
-        "source_name": "Sensor_ID",
-        "internal_mapping": "entity_name",
-        "data_type": "string"
-      },
-      {
-        "source_name": "Timestamp",
-        "internal_mapping": "time_period",
-        "data_type": "integer"
-      },
-      {
-        "source_name": "Raw_Value",
-        "internal_mapping": "metric_value",
-        "data_type": "float"
-      },
-      {
-        "source_name": "Auth_Signature",
-        "internal_mapping": "security_hash",
-        "data_type": "string"
-      }
+      { "source_name": "time_period",    "internal_mapping": "time_period",   "data_type": "integer" },
+      { "source_name": "metric_value",   "internal_mapping": "metric_value",  "data_type": "float"   },
+      { "source_name": "component",      "internal_mapping": "entity_name",   "data_type": "string"  },
+      { "source_name": "country",        "internal_mapping": "entity_name",   "data_type": "string"  },
+      { "source_name": "Auth_Signature", "internal_mapping": "security_hash", "data_type": "string"  }
     ]
   },
   "processing": {
